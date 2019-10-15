@@ -157,8 +157,13 @@ def _pages_per_day() -> Dict[str, int]:
         # Resolves the issue of possible missing dates.
         # defaultdict(lambda: defaultdict(int)) doesn't work due to inability to pickle local objects like lambdas;
         # this effectively does the same thing as that.
+<<<<<<< HEAD
         pages_printed: Dict[Any, Any] = defaultdict(partial(defaultdict, int))
         last_seen: Dict[Any, Any] = {}
+=======
+        pages_printed = defaultdict(partial(defaultdict, int))
+        last_seen = {}
+>>>>>>> Fix double assigment, add comments
 
         for row in cursor:
             if row['printer'] in last_seen:
