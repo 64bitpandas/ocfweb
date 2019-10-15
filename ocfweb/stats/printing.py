@@ -168,10 +168,10 @@ def _pages_per_day() -> Dict[str, int]:
                 )
             last_seen[row['printer']] = row['value']
 
-    # Fix missing rows in table (if data collection failed)
-    for day in (date.today() - timedelta(n) for n in range(30)):
-        if day not in pages_printed.keys():
-            pages_printed[day] = defaultdict(int)
+    # # Fix missing rows in table (if data collection failed)
+    # for day in (date.today() - timedelta(n) for n in range(30)):
+    #     if day not in pages_printed.keys():
+    #     pages_printed[day] = defaultdict(int)
 
     return pages_printed
 
