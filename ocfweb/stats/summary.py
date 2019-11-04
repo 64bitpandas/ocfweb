@@ -4,6 +4,7 @@ from datetime import datetime
 from operator import attrgetter
 from typing import Any
 from typing import Callable
+from typing import List
 
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -27,7 +28,7 @@ _logger = logging.getLogger(__name__)
 
 
 @periodic(60)
-def desktop_profiles() -> list:
+def desktop_profiles() -> List[Any]:
     open_, close = get_open_close(date.today())
     now = datetime.today()
 
@@ -49,17 +50,17 @@ def desktop_profiles() -> list:
 
 
 @periodic(30)
-def staff_in_lab() -> list:
+def staff_in_lab() -> List[Any]:
     return real_staff_in_lab()
 
 
 @periodic(300)
-def top_staff_alltime() -> list:
+def top_staff_alltime() -> List[Any]:
     return real_top_staff_alltime()
 
 
 @periodic(300)
-def top_staff_semester() -> list:
+def top_staff_semester() -> List[Any]:
     return real_top_staff_semester()
 
 
@@ -74,8 +75,8 @@ def staff_in_lab_count() -> int:
 
 
 @periodic(60)
-def printers() -> list:
-    def silence(f: Callable) -> Callable:
+def printers() -> List[Any]:
+    def silence(f: Callable[..., Any]) -> Callable[..., Any]:
         def inner(*args: Any, **kwargs: Any) -> Any:
             try:
                 return f(*args, **kwargs)

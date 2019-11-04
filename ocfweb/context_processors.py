@@ -1,6 +1,7 @@
 import re
 from ipaddress import ip_address
 from typing import Any
+from typing import Dict
 from typing import Generator
 
 from django.urls import reverse
@@ -14,7 +15,7 @@ from ocfweb.component.session import logged_in_user
 from ocfweb.environment import ocfweb_version
 
 
-def get_base_css_classes(request: Any) -> Generator:
+def get_base_css_classes(request: Any) -> Generator[str, None, None]:
     if request.resolver_match and request.resolver_match.url_name:
         page_class = 'page-' + request.resolver_match.url_name
         yield page_class
@@ -24,7 +25,7 @@ def get_base_css_classes(request: Any) -> Generator:
             yield page_class
 
 
-def ocf_template_processor(request: Any) -> dict:
+def ocf_template_processor(request: Any) -> Dict[str, Any]:
     hours_listing = get_hours_listing()
     real_ip, _ = get_client_ip(request)
     user = logged_in_user(request)

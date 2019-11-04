@@ -6,9 +6,11 @@ from datetime import datetime
 from itertools import chain
 from typing import Any
 from typing import Callable
+from typing import Dict
 from typing import Hashable
 from typing import Iterable
 from typing import Optional
+from typing import Tuple
 
 from cached_property import cached_property
 from django.conf import settings
@@ -27,7 +29,7 @@ def cache_lookup(key: Hashable) -> Any:
     # The recommended workaround is using a sentinel as a default
     # return value for when a key is missing. This allows us to still
     # cache functions which return None.
-    cache_miss_sentinel: dict = {}
+    cache_miss_sentinel: Dict[Any, Any] = {}
     retval = django_cache.get(key, cache_miss_sentinel)
     is_hit = retval is not cache_miss_sentinel
 
@@ -40,7 +42,7 @@ def cache_lookup(key: Hashable) -> Any:
 
 
 def cache_lookup_with_fallback(
-    key: Hashable, fallback: Callable, ttl: Optional[int] = None, force_miss: bool = False,
+    key: Hashable, fallback: Callable[[], Any], ttl: Optional[int] = None, force_miss: bool = False,
 ) -> Any:
     """Look up a key in the cache, falling back to a function if it's a miss.
 
@@ -75,7 +77,7 @@ def cache_lookup_with_fallback(
         return result
 
 
-def cache(ttl: Optional[int] = None) -> Callable:
+def cache(ttl: Optional[int] = None) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
     """Caching function decorator, with an optional ttl.
 
     The optional ttl (in seconds) specifies how long cache entries should live.
@@ -100,7 +102,7 @@ def cache(ttl: Optional[int] = None) -> Callable:
         def my_changing_function(a, b, c):
             ....
     """
-    def outer(fn: Callable) -> Callable:
+    def outer(fn: Callable[..., Any]) -> Callable[..., Any]:
         def inner(*args: Any, **kwargs: Any) -> Any:
             return cache_lookup_with_fallback(
                 _make_function_call_key(fn, args, kwargs),
@@ -111,7 +113,7 @@ def cache(ttl: Optional[int] = None) -> Callable:
     return outer
 
 
-def _make_key(key: Iterable[Any]) -> tuple:
+def _make_key(key: Iterable[Any]) -> Tuple[Any, ...]:
     """Return a key suitable for caching.
 
     The returned key prepends a version tag so that we don't share the cache
@@ -128,7 +130,7 @@ def _make_key(key: Iterable[Any]) -> tuple:
     )
 
 
-def _make_function_call_key(fn: Callable, args: Iterable, kwargs: dict) -> tuple:
+def _make_function_call_key(fn: Callable[..., Any], args: Iterable[Any], kwargs: Dict[Any, Any]) -> Tuple[Any, ...]:
     """Return a key for a function call.
 
     The key will eventually be converted to a string and used as a cache key.
@@ -172,11 +174,11 @@ class PeriodicFunction(
         return f'PeriodicFunction({self.function_call_key})'
 
     @cached_property
-    def function_call_key(self) -> tuple:
+    def function_call_key(self) -> Tuple[Any, ...]:
         """Return the function's cache key."""
         return _make_function_call_key(self.function, (), {})
 
-    def function_with_timestamp(self) -> tuple:
+    def function_with_timestamp(self) -> Tuple[datetime, Any]:
         """Return a tuple (timestamp, result).
 
         This is the value we actually store in the cache; the benefit is that
@@ -232,7 +234,7 @@ class PeriodicFunction(
         )
 
 
-def periodic(period: float, ttl: Optional[float] = None) -> Callable:
+def periodic(period: float, ttl: Optional[float] = None) -> Callable[[Callable[..., Any]], Any]:
     """Caching function decorator for functions which desire TTL-based caching.
 
     Using this decorator on a function registers it as a "periodic function",
@@ -269,7 +271,7 @@ def periodic(period: float, ttl: Optional[float] = None) -> Callable:
     elif ttl is None:
         ttl = period * 2
 
-    def outer(fn: Callable) -> Any:
+    def outer(fn: Callable[..., Any]) -> Any:
         pf = PeriodicFunction(
             function=fn,
             period=period,

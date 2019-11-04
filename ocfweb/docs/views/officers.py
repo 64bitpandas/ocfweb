@@ -5,6 +5,7 @@ from typing import Any
 from typing import Callable
 from typing import List
 from typing import Optional
+from typing import Tuple
 from typing import Union
 
 from django.http import HttpResponse
@@ -16,7 +17,13 @@ from ocfweb import caching
 _Term = namedtuple('_Term', ['name', 'gms', 'sms', 'dgms', 'dsms'])
 
 
-def Term(name: str, gms: list, sms: list, dgms: Optional[list] = None, dsms: Optional[list] = None) -> tuple:
+def Term(
+    name: str,
+    gms: List[Any],
+    sms: List[Any],
+    dgms: Optional[List[Any]] = None,
+    dsms: Optional[List[Any]] = None,
+) -> _Term:
     gms = list(map(Officer.from_uid_or_info, gms))
     sms = list(map(Officer.from_uid_or_info, sms))
     dgms = list(map(Officer.from_uid_or_info, dgms or []))
@@ -27,7 +34,7 @@ def Term(name: str, gms: list, sms: list, dgms: Optional[list] = None, dsms: Opt
 class Officer(namedtuple('Officer', ['uid', 'name', 'start', 'end', 'acting'])):
 
     @classmethod
-    def from_uid_or_info(cls: Callable, uid_or_info: Union[tuple, str]) -> Any:
+    def from_uid_or_info(cls: Callable[..., Any], uid_or_info: Union[Tuple[Any, ...], str]) -> Any:
         if isinstance(uid_or_info, tuple):
             if len(uid_or_info) == 3:
                 uid, start, end = uid_or_info
@@ -82,7 +89,7 @@ MISSING_NAMES = {
 # This function makes approximately five million LDAP queries, so it's
 # important that these terms aren't loaded at import time.
 @caching.periodic(math.inf)
-def _bod_terms() -> List:
+def _bod_terms() -> List[Any]:
     return [
         Term(
             'Spring 1989',

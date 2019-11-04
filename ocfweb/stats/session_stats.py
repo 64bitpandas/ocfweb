@@ -1,4 +1,5 @@
 from typing import Any
+from typing import List
 
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -11,12 +12,12 @@ from ocfweb.caching import periodic
 
 
 @periodic(300)
-def top_staff_alltime() -> list:
+def top_staff_alltime() -> List[Any]:
     return real_top_staff_alltime()
 
 
 @periodic(300)
-def top_staff_semester() -> list:
+def top_staff_semester() -> List[Any]:
     return real_top_staff_semester()
 
 

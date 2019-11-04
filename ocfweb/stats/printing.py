@@ -5,6 +5,7 @@ from datetime import timedelta
 from functools import partial
 from typing import Any
 from typing import Dict
+from typing import List
 
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -67,7 +68,7 @@ def _semester_histogram() -> Figure:
 
 
 @periodic(3600)
-def _toner_changes() -> list:
+def _toner_changes() -> List[Any]:
     return [
         (
             printer,
@@ -156,8 +157,8 @@ def _pages_per_day() -> Dict[str, int]:
         # Resolves the issue of possible missing dates.
         # defaultdict(lambda: defaultdict(int)) doesn't work due to inability to pickle local objects like lambdas;
         # this effectively does the same thing as that.
-        pages_printed: dict = defaultdict(partial(defaultdict, int))
-        last_seen: dict = {}
+        pages_printed: Dict[Any, Any] = defaultdict(partial(defaultdict, int))
+        last_seen: Dict[Any, Any] = {}
 
         for row in cursor:
             if row['printer'] in last_seen:
@@ -170,7 +171,7 @@ def _pages_per_day() -> Dict[str, int]:
     return pages_printed
 
 
-def _pages_printed_for_printer(printer: str, resolution: int = 100) -> list:
+def _pages_printed_for_printer(printer: str, resolution: int = 100) -> List[Any]:
     with stats.get_connection() as cursor:
         cursor.execute(
             '''
@@ -197,7 +198,7 @@ def _pages_printed_for_printer(printer: str, resolution: int = 100) -> list:
 
 
 @periodic(3600)
-def _pages_printed_data() -> list:
+def _pages_printed_data() -> List[Any]:
     return [
         {
             'name': printer,

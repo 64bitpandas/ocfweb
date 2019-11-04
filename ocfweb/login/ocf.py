@@ -20,7 +20,7 @@ from ocfweb.component.session import login as session_login
 from ocfweb.component.session import logout as session_logout
 
 
-def _valid_return_path(return_to: str) -> Optional[Match]:
+def _valid_return_path(return_to: str) -> Optional[Match[Any]]:
     """Make sure this is a valid relative path to prevent redirect attacks."""
     return re.match(
         '^/[^/]',

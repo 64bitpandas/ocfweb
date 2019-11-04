@@ -1,5 +1,6 @@
 import time
 from typing import Any
+from typing import List
 
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -10,7 +11,7 @@ from ocfweb.component.lab_status import get_lab_status
 
 
 @periodic(60, ttl=86400)
-def get_staff_hours() -> list:
+def get_staff_hours() -> List[Any]:
     return real_get_staff_hours()
 
 

@@ -1,6 +1,7 @@
 from collections import namedtuple
 from typing import Any
 from typing import Optional
+from typing import Tuple
 
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -37,7 +38,7 @@ class ThingToUpgrade(
 
 
 @cache()
-def _get_servers() -> tuple:
+def _get_servers() -> Tuple[Any, ...]:
     return (
         # login servers
         ThingToUpgrade.from_hostname(

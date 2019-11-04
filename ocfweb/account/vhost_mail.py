@@ -5,6 +5,7 @@ from contextlib import contextmanager
 from textwrap import dedent
 from typing import Any
 from typing import Collection
+from typing import Dict
 from typing import Generator
 from typing import Optional
 from typing import Tuple
@@ -224,14 +225,14 @@ def _write_csv(addresses: Generator[Any, None, None]) -> Any:
     return buf.getvalue()
 
 
-def _parse_csv(request: Any, domain: str) -> dict:
+def _parse_csv(request: Any, domain: str) -> Dict[str, Any]:
     """Parse, validate, and return addresses from the file uploaded
     with the CSV upload button/form."""
     csv_file = request.FILES.get('csv_file')
     if not csv_file:
         _error(request, 'Missing CSV file!')
 
-    addresses = {}
+    addresses: Dict[str, Collection[Any]] = {}
     try:
         with io.TextIOWrapper(csv_file, encoding='utf-8') as f:
             reader = csv.reader(f)
@@ -258,7 +259,7 @@ def _parse_csv(request: Any, domain: str) -> dict:
     return addresses
 
 
-def _parse_csv_forward_addrs(string: str) -> Collection:
+def _parse_csv_forward_addrs(string: str) -> Collection[Any]:
     """Parse and validate emails from a commas-and-whitespace separated
     list string."""
     # Allow any combination of whitespace and , as separators
@@ -335,7 +336,7 @@ def _get_addr(request: Any, user: Any, field: str, required: bool = True) -> Opt
     return None
 
 
-def _get_forward_to(request: Any) -> Optional[Collection]:
+def _get_forward_to(request: Any) -> Optional[Collection[Any]]:
     forward_to = request.POST.get('forward_to')
 
     if forward_to is None:
@@ -391,7 +392,7 @@ def _find_addr(c: Any, vhost: Any, addr: str) -> Any:
 
 
 @contextmanager
-def _txn(**kwargs: Any) -> Generator:
+def _txn(**kwargs: Any) -> Generator[Any, None, None]:
     with get_connection(
         user=settings.OCFMAIL_USER,
         password=settings.OCFMAIL_PASSWORD,

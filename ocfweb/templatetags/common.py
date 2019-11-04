@@ -9,7 +9,7 @@ register = template.Library()
 
 
 @register.filter
-def getitem(obj: MutableMapping, item: Any) -> Any:
+def getitem(obj: MutableMapping[Any, Any], item: Any) -> Any:
     """Grab the item from the object.
 
     Example usage:
@@ -25,7 +25,7 @@ def sum_values(obj: Any) -> Any:
 
 
 @register.filter
-def sort(items: Iterable) -> Iterable:
+def sort(items: Iterable[Any]) -> Iterable[Any]:
     """Sort items.
 
     Consider using the built-in `dictsort` filter if you're sorting
@@ -38,7 +38,7 @@ def sort(items: Iterable) -> Iterable:
 
 
 @register.filter
-def join(items: Iterable, s: str) -> str:
+def join(items: Iterable[Any], s: str) -> str:
     """Join items (probably of an array).
 
     Example usage:

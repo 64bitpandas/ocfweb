@@ -1,6 +1,8 @@
 import re
 from typing import Any
+from typing import List
 from typing import Match
+from typing import Set
 from typing import Tuple
 from typing import TYPE_CHECKING
 
@@ -41,10 +43,10 @@ class HtmlCommentsLexerMixin(_Base):
         )
         self.default_rules.insert(0, 'html_comment')
 
-    def output_html_comment(self, m: Match) -> str:
+    def output_html_comment(self, m: Match[Any]) -> str:
         return ''
 
-    def parse_html_comment(self, m: Match) -> None:
+    def parse_html_comment(self, m: Match[Any]) -> None:
         pass
 
 
@@ -73,7 +75,7 @@ class BackslashLineBreakLexerMixin(_Base):
         )
         self.default_rules.insert(0, 'backslash_line_break')
 
-    def output_backslash_line_break(self, m: Match) -> str:
+    def output_backslash_line_break(self, m: Match[Any]) -> str:
         return '<br>'
 
 
@@ -123,7 +125,7 @@ class DjangoLinkInlineLexerMixin(_Base):
         )
         self.default_rules.insert(0, 'django_link')
 
-    def output_django_link(self, m: Match) -> str:
+    def output_django_link(self, m: Match[Any]) -> str:
         text, target, fragment = m.group(1), m.group(2), m.group(3)
 
         def href(link: str, fragment: str) -> str:
@@ -160,10 +162,10 @@ class HeaderRendererMixin(_Base):
     """
 
     def reset_toc(self) -> None:
-        self.toc: list = []
-        self.toc_ids: set = set()
+        self.toc: List[Any] = []
+        self.toc_ids: Set[Any] = set()
 
-    def get_toc(self) -> list:
+    def get_toc(self) -> List[Any]:
         return self.toc
 
     def header(self, text: str, level: int, raw: None = None) -> str:
@@ -242,7 +244,7 @@ def markdown(text: str) -> mistune.Markdown:
     return _markdown(text)
 
 
-def text_and_meta(f: Any) -> Tuple[str, dict]:
+def text_and_meta(f: Any) -> Tuple[str, Any]:
     """Return tuple (text, meta dict) for the given file.
 
     Meta tags are stripped from the Markdown source, but the Markdown is
@@ -251,7 +253,7 @@ def text_and_meta(f: Any) -> Tuple[str, dict]:
     text = f.read()
     meta = {}
 
-    def repl(match: Match) -> str:
+    def repl(match: Match[Any]) -> str:
         meta[match.group(1)] = match.group(2)
         return ''
 
@@ -260,7 +262,7 @@ def text_and_meta(f: Any) -> Tuple[str, dict]:
 
 
 @cache()
-def markdown_and_toc(text: str) -> tuple:
+def markdown_and_toc(text: str) -> Tuple[Any, Any]:
     """Return tuple (html, toc) for the given text."""
     html = markdown(text)
     return html, _renderer.get_toc()

@@ -12,7 +12,7 @@ class Form(forms.Form):
     required_css_class = 'required'
 
 
-def wrap_validator(validator: Callable) -> Callable:
+def wrap_validator(validator: Callable[..., Any]) -> Callable[..., None]:
     """Wraps a validator which raises some kind of Exception, and instead
     returns a Django ValidationError with the same message.
 

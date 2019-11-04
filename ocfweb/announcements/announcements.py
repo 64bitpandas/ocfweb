@@ -37,8 +37,8 @@ class Announcement(namedtuple('Announcement', ('title', 'date', 'path', 'render'
         )
 
 
-def announcement(title: str, date: date, path: str) -> Callable:
-    def wrapper(fn: Callable) -> Callable:
+def announcement(title: str, date: date, path: str) -> Callable[[Any], Any]:
+    def wrapper(fn: Callable[..., Any]) -> Callable[..., Any]:
         global announcements
         announcements += (
             Announcement(

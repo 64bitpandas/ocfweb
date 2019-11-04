@@ -13,7 +13,7 @@ register = template.Library()
 class PygmentsNode(template.Node):
     html_formatter = HtmlFormatter(noclasses=True)
 
-    def __init__(self, nodes: Iterable, lang: str) -> None:
+    def __init__(self, nodes: Iterable[Any], lang: str) -> None:
         self.nodes = nodes
         self.lang = lang
 

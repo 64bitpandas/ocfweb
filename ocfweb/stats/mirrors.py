@@ -1,5 +1,6 @@
 from datetime import date
 from typing import Any
+from typing import Tuple
 
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -32,7 +33,7 @@ def stats_mirrors(request: Any) -> HttpResponse:
 
 
 @periodic(86400)
-def bandwidth_semester() -> tuple:
+def bandwidth_semester() -> Tuple[Any, Any]:
 
     data = bandwidth_by_dist(current_semester_start())
 
@@ -43,7 +44,7 @@ def bandwidth_semester() -> tuple:
 
 
 @periodic(86400)
-def bandwidth_all_time() -> tuple:
+def bandwidth_all_time() -> Tuple[Any, Any]:
 
     data = bandwidth_by_dist(MIRRORS_EPOCH)
 

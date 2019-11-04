@@ -1,5 +1,6 @@
 from typing import Any
 from typing import Iterator
+from typing import List
 
 from django import forms
 from django.http import HttpResponse
@@ -25,8 +26,8 @@ CALLINK_ERROR_MSG = (
 )
 
 
-def get_accounts_signatory_for(calnet_uid: str) -> list:
-    def flatten(lst: Iterator) -> list:
+def get_accounts_signatory_for(calnet_uid: str) -> List[Any]:
+    def flatten(lst: Iterator[Any]) -> List[Any]:
         return [item for sublist in lst for item in sublist]
 
     group_accounts = flatten(
@@ -43,7 +44,7 @@ def get_accounts_signatory_for(calnet_uid: str) -> list:
     return group_accounts
 
 
-def get_accounts_for(calnet_uid: str) -> list:
+def get_accounts_for(calnet_uid: str) -> List[Any]:
     accounts = users_by_calnet_uid(calnet_uid)
 
     if calnet_uid in TESTER_CALNET_UIDS:
@@ -121,7 +122,7 @@ def change_password(request: Any) -> HttpResponse:
 
 class ChpassForm(Form):
 
-    def __init__(self, ocf_accounts: list, calnet_uid: str, *args: Any, **kwargs: Any) -> None:
+    def __init__(self, ocf_accounts: List[str], calnet_uid: str, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self.calnet_uid = calnet_uid
         self.fields['ocf_account'] = forms.ChoiceField(

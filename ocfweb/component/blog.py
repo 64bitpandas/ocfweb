@@ -1,6 +1,7 @@
 from collections import namedtuple
 from typing import Any
 from typing import Dict
+from typing import List
 from xml.etree import ElementTree as etree
 
 import dateutil.parser
@@ -56,7 +57,7 @@ class Post(
 
 
 @periodic(60)
-def get_blog_posts() -> list:
+def get_blog_posts() -> List[Any]:
     """Parse the beautiful OCF status blog atom feed into a list of Posts.
 
     Unfortunately Blogger is hella flakey so we use it inside a loop and fail

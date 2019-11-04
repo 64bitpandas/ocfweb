@@ -1,4 +1,5 @@
 from typing import Any
+from typing import List
 from typing import Set
 
 from django.http import JsonResponse
@@ -11,7 +12,7 @@ from ocfweb.caching import periodic
 
 
 @cache()
-def _list_public_desktops() -> list:
+def _list_public_desktops() -> List[Any]:
     return list_desktops(public_only=True)
 
 

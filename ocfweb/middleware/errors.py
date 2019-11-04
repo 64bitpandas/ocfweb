@@ -4,6 +4,7 @@ from textwrap import dedent
 from traceback import format_exc
 from typing import Any
 from typing import Callable
+from typing import Dict
 from typing import Iterable
 
 from django.conf import settings
@@ -26,7 +27,7 @@ def sanitize(msg: str) -> str:
     return msg
 
 
-def sanitize_wsgi_context(headers: Iterable) -> dict:
+def sanitize_wsgi_context(headers: Iterable[Any]) -> Dict[Any, Any]:
     """Attempt to sanitize out known-bad WSGI context keys."""
     headers = dict(headers)
     for key in SENSITIVE_WSGI_CONTEXT:
@@ -37,7 +38,7 @@ def sanitize_wsgi_context(headers: Iterable) -> dict:
 
 class OcflibErrorMiddleware:
 
-    def __init__(self, get_response: Callable) -> None:
+    def __init__(self, get_response: Callable[..., Any]) -> None:
         self.get_response = get_response
 
     def __call__(self, request: Any) -> Any:

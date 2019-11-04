@@ -25,7 +25,10 @@ def current_start_end() -> Tuple[date, date]:
     return end - timedelta(days=DEFAULT_DAYS), end
 
 
-def canonical_graph(hot_path: Optional[Callable] = None, default_start_end: Callable = current_start_end) -> Callable:
+def canonical_graph(
+    hot_path: Optional[Callable[..., Any]] = None,
+    default_start_end: Callable[..., Tuple[date, date]] = current_start_end,
+) -> Callable[..., Any]:
     """Decorator to make graphs with a start_day and end_day.
 
     It does three primary things:
@@ -46,7 +49,7 @@ def canonical_graph(hot_path: Optional[Callable] = None, default_start_end: Call
     :param default_start_end: optional, function to get current start/end date
                               (default: current_start_end)
     """
-    def decorator(fn: Callable) -> Callable:
+    def decorator(fn: Callable[[Any, date, date], Any]) -> Callable[[Any], Any]:
         def wrapper(request: Any) -> Any:
             def _day_from_params(param: str, default: date) -> date:
                 try:

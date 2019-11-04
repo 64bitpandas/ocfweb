@@ -14,7 +14,7 @@ from ocfweb.component.session import is_logged_in
 from ocfweb.component.session import logged_in_user
 
 
-def login_required(function: Callable) -> Callable:
+def login_required(function: Callable[..., Any]) -> Callable[..., Any]:
     def _decorator(request: Any, *args: Any, **kwargs: Any) -> Any:
         if is_logged_in(request):
             return function(request, *args, **kwargs)
@@ -25,7 +25,7 @@ def login_required(function: Callable) -> Callable:
     return _decorator
 
 
-def group_account_required(function: Callable) -> Callable:
+def group_account_required(function: Callable[..., Any]) -> Callable[..., Any]:
     def _decorator(request: Any, *args: Any, **kwargs: Any) -> Any:
         try:
             user: Optional[str] = logged_in_user(request)
@@ -44,7 +44,7 @@ def group_account_required(function: Callable) -> Callable:
     return _decorator
 
 
-def calnet_required(fn: Callable) -> Callable:
+def calnet_required(fn: Callable[..., Any]) -> Callable[..., Any]:
     """Decorator for views that require CalNet auth
 
     Checks if "calnet_uid" is in the request.session dictionary. If the value

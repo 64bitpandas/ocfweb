@@ -3,6 +3,7 @@ from enum import Enum
 from functools import partial
 from ipaddress import ip_address
 from typing import Any
+from typing import Dict
 
 from django.conf import settings
 from django.http import HttpResponse
@@ -109,7 +110,7 @@ def _close_sessions(host: str) -> None:
 
 
 @cache(600)
-def _get_desktops() -> dict:
+def _get_desktops() -> Dict[Any, Any]:
     """Return IPv4 and 6 address to fqdn mapping for OCF desktops from LDAP."""
 
     desktops = {}
