@@ -14,7 +14,7 @@ OCF_LONGITUDE = -122.259715
 
 
 @register.inclusion_tag('partials/google-map.html')
-def google_map(width, height, show_info=True):
+def google_map(width: float, height: float, show_info: bool = True) -> dict:
     return {
         'width': width,
         'height': height,
@@ -27,7 +27,7 @@ def google_map(width, height, show_info=True):
 
 
 @register.inclusion_tag('partials/google-map-static.html')
-def google_map_static(width, height):
+def google_map_static(width: float, height: float) -> dict:
     return {
         'url': 'https://maps.googleapis.com/maps/api/staticmap?{}'.format(
             urlencode({

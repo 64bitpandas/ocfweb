@@ -1,4 +1,5 @@
 from collections import namedtuple
+from typing import Mapping
 
 from django import template
 from django.urls import reverse
@@ -9,7 +10,7 @@ _NavItem = namedtuple('NavItem', ['url', 'title', 'active'])
 
 
 @register.inclusion_tag('stats/partials/stats-navbar.html', takes_context=True)
-def stats_navbar(context):
+def stats_navbar(context: Mapping) -> dict:
     return {
         'navbar': [
             _NavItem(

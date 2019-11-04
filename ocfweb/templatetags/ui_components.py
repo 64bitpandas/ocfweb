@@ -4,7 +4,7 @@ register = template.Library()
 
 
 @register.inclusion_tag('partials/progress-bar.html')
-def progress_bar(label, value, max):
+def progress_bar(label: str, value: int, max: int) -> dict:
     """Render a Bootstrap progress bar.
 
     :param label:

@@ -2,6 +2,9 @@ import re
 from pprint import pformat
 from textwrap import dedent
 from traceback import format_exc
+from typing import Any
+from typing import Callable
+from typing import Iterable
 
 from django.conf import settings
 from django.http.response import Http404
@@ -9,14 +12,13 @@ from ocflib.misc.mail import send_problem_report
 
 from ocfweb.component.errors import ResponseException
 
-
 SENSITIVE_WSGI_CONTEXT = frozenset((
     'HTTP_COOKIE',
     'CSRF_COOKIE',
 ))
 
 
-def sanitize(msg):
+def sanitize(msg: str) -> str:
     """Attempt to sanitize out known-bad patterns."""
     # Remove any dictionary references with "encrypted_password", e.g. lines like:
     #   {'some_key': ..., 'encrypted_password': b'asdf', 'some_other_key': ...}
@@ -24,7 +26,7 @@ def sanitize(msg):
     return msg
 
 
-def sanitize_wsgi_context(headers):
+def sanitize_wsgi_context(headers: Iterable) -> dict:
     """Attempt to sanitize out known-bad WSGI context keys."""
     headers = dict(headers)
     for key in SENSITIVE_WSGI_CONTEXT:
@@ -35,13 +37,13 @@ def sanitize_wsgi_context(headers):
 
 class OcflibErrorMiddleware:
 
-    def __init__(self, get_response):
+    def __init__(self, get_response: Callable) -> None:
         self.get_response = get_response
 
-    def __call__(self, request):
+    def __call__(self, request: Any) -> Any:
         return self.get_response(request)
 
-    def process_exception(self, request, exception):
+    def process_exception(self, request: Any, exception: Exception) -> Any:
         if isinstance(exception, ResponseException):
             return exception.response
 

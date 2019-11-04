@@ -1,9 +1,13 @@
 from collections import namedtuple
+from typing import Any
+from typing import Optional
 
+from django.http import HttpResponse
 from django.shortcuts import render
 from ocflib.misc.validators import host_exists
 
 from ocfweb.caching import cache
+from ocfweb.docs.doc import Document
 from ocfweb.docs.views.servers import Host
 
 
@@ -22,7 +26,7 @@ class ThingToUpgrade(
     UPGRADED = 3
 
     @classmethod
-    def from_hostname(cls, hostname, status=NEEDS_UPGRADE, comments=None):
+    def from_hostname(cls: Any, hostname: str, status: int = NEEDS_UPGRADE, comments: Optional[str] = None) -> Any:
         has_dev = host_exists('dev-' + hostname + '.ocf.berkeley.edu')
         return cls(
             host=Host.from_ldap(hostname),
@@ -33,7 +37,7 @@ class ThingToUpgrade(
 
 
 @cache()
-def _get_servers():
+def _get_servers() -> tuple:
     return (
         # login servers
         ThingToUpgrade.from_hostname(
@@ -194,7 +198,7 @@ def _get_servers():
     )
 
 
-def buster_upgrade(doc, request):
+def buster_upgrade(doc: Document, request: Any) -> HttpResponse:
     return render(
         request,
         'docs/buster_upgrade.html',
