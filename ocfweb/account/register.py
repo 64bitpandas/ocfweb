@@ -90,10 +90,10 @@ def request_account(request: HttpRequest) -> Union[HttpResponseRedirect, HttpRes
             if isinstance(task.result, NewAccountResponse):
                 if task.result.status == NewAccountResponse.REJECTED:
                     status = 'has_errors'
-                    form.add_error('NON_FIELD_ERRORS', task.result.errors)
+                    form.add_error(None, task.result.errors)
                 elif task.result.status == NewAccountResponse.FLAGGED:
                     status = 'has_warnings'
-                    form.add_error('NON_FIELD_ERRORS', task.result.errors)
+                    form.add_error(None, task.result.errors)
                 elif task.result.status == NewAccountResponse.PENDING:
                     return HttpResponseRedirect(reverse('account_pending'))
                 else:
